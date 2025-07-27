@@ -1,0 +1,216 @@
+.login-container {
+  font-family: "Inter", "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #e4f1f9);
+  padding: 20px;
+}
+
+.login-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.login-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 128, 128, 0.25);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 12px;
+}
+
+h2 {
+  font-size: 28px;
+  color: #008080;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: transparent;
+  color: #008080;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  transition: all 0.2s ease;
+}
+
+.back-button svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5px;
+}
+
+.back-button:hover {
+  background-color: rgba(0, 128, 128, 0.08);
+  color: #006666;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+label {
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.input-field {
+  height: 48px;
+  padding: 0 16px;
+  font-size: 15px;
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: #94a3b8;
+}
+
+.input-field:focus {
+  border-color: #008080;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-wrapper .input-field {
+  padding-right: 48px;
+}
+
+.eye-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+}
+
+.eye-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.eye-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.submit-button {
+  height: 52px;
+  background-color: #008080;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #006666;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 128, 128, 0.3);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.navigate-register {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.navigate-register-btn {
+  background-color: transparent;
+  color: #008080;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: color 0.2s ease;
+}
+
+.navigate-register-btn:hover {
+  color: #006666;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    padding: 30px 24px;
+  }
+
+  .back-button {
+    top: 16px;
+    left: 16px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .input-field {
+    height: 46px;
+  }
+
+  .submit-button {
+    height: 48px;
+  }
+}

@@ -1,0 +1,68 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+dist
+dist-ssr
+*.local
+.pnp
+.pnp.js
+
+# Code Editor or IDE Directories and Files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.idea/*
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+coverage
+
+# Build and Output
+dist/
+
+# Next.JS
+.next/
+out/
+build
+
+# Miscellenous
+*.pem
+
+# Local ENV Files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Turbo Files
+.turbo
+
+# TSC
+tsconfig.tsbuildinfo
+
+# Vercel
+.vercel
+
+# Storybook
+storybook-static/
+apps/client/src/git.properties.json
+
+# Temporary Files
+temp/
+
+# Story Books and Logs
+*storybook.log

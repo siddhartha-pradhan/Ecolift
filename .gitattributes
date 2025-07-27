@@ -1,0 +1,53 @@
+# ==============================
+# General Settings
+# ==============================
+
+# Auto-detect text files and normalize to LF (Unix style)
+* text=auto eol=lf
+
+# Force specific text files to use LF (important for cross-platform devs)
+*.js     text eol=lf
+*.jsx    text eol=lf
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.json   text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.sh     text eol=lf
+*.env    text eol=lf
+
+# ==============================
+# Binary files (no diffs)
+# ==============================
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.svg    binary
+*.webp   binary
+*.mp4    binary
+*.mp3    binary
+
+# ==============================
+# Lock package files to prevent merge conflicts
+# ==============================
+package-lock.json merge=ours
+yarn.lock          merge=ours
+
+# ==============================
+# Node/React build files (binary)
+# ==============================
+*.ttf    binary
+*.woff   binary
+*.woff2  binary
+
+# ==============================
+# Diff settings for documentation
+# ==============================
+*.md diff=markdown
+*.json diff=json

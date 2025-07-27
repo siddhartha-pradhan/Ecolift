@@ -1,0 +1,27 @@
+export default {
+    type: 'object',
+    properties: {
+      user: { type: 'string', format: 'mongoObjectId' },
+      pickupLocation: { type: 'string' },
+      dropoffLocation: { type: 'string' },
+      vehicleType: { type: 'string' },
+      status: { type: 'string' },
+      distance: { type: 'number' },
+      isPreBooked: { type: 'boolean' },
+      preBookedDate: { type: 'string', format: 'date-time' },
+      fare: { type: 'integer' },
+      driver: { type: 'string', format: 'mongoObjectId' },
+    },
+    required: [
+      'user',
+      'pickupLocation',
+      'dropoffLocation',
+      'vehicleType',
+      'status',
+      'distance',
+      'isPreBooked',
+      'preBookedDate',
+      'fare',
+    ],
+    additionalProperties: false,
+  };
