@@ -20,6 +20,7 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 
 const RideOngoingBanner = ({
                              rideDetails,
+    status,
                              onClose,
                              pickupLocation,
                              dropoffLocation,
@@ -112,7 +113,7 @@ const RideOngoingBanner = ({
           <Text style={styles.value}>{rideDetails?.driver?.user?.phonenumber}</Text>
 
           <Text style={styles.label}>Status</Text>
-          <Text style={styles.value}>{rideDetails?.status}</Text>
+          <Text style={styles.value}>{status}</Text>
 
           <Text style={styles.label}>Vehicle Type:</Text>
           <Text style={styles.value}>{rideDetails?.driver?.vehicleDetails}</Text>

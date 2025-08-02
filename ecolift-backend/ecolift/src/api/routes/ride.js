@@ -109,6 +109,10 @@ router.post('', async (req, res, next) => {
       userProfile: userProfile._id
     }
     const obj = await RideService.create(req.body);
+    const updatedFreeRides = Math.max((userProfile.freeRidesRemaining || 0) - 1, 0);
+    await UserProfileService.update(userProfile._id, {
+      freeRidesRemaining: updatedFreeRides,
+    });
     res.status(201).json(obj);
   } catch (error) {
     if (error.isClientError()) {
@@ -328,7 +332,60 @@ router.get('/ignore/driver/:id', async (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /ride/{id}/status:
+ *   post:
+ *     tags: [Ride]
+ *     summary: Update status of a ride (e.g. started, reached)
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ride ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newStatus
+ *               - driverUserId
+ *             properties:
+ *               newStatus:
+ *                 type: string
+ *                 enum: [started, reached]
+ *               driverUserId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Ride status updated
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Ride not found or invalid status
+ */
+router.post('/:id/status', async (req, res, next) => {
+  try {
+    const { newStatus } = req.body;
+    const rideId = req.params.id;
 
+    const updated = await RideService.updateRideStatus(rideId, newStatus);
+    if (!updated) {
+      return res.status(404).json({ message: "Ride not found or update failed." });
+    }
+
+    res.status(200).json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message || "Failed to update status." });
+    next(err);
+  }
+});
 
 
 export default router;

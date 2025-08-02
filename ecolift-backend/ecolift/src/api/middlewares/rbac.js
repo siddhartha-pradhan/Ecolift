@@ -9,6 +9,7 @@ const permissions = {
     "ride:get",
     "driver:get",
     "advertisement:get",
+    "*",
   ],
   Premium: [
     "user-profile:post",
@@ -18,6 +19,7 @@ const permissions = {
     "ride:put",
     "driver:get",
     "advertisement:get",
+    "*",
   ],
   Driver: [
     "user-profile:post",

@@ -138,11 +138,11 @@ class RideService {
       }
       const ride = await Ride.findOne({ _id: id });
       const userProfile = await UserProfileService.get(ride.userProfile);
-      if (userProfile.freeRidesRemaining > 0) {
-        await UserProfileService.update(userProfile._id, {
-          freeRidesRemaining: userProfile.freeRidesRemaining - 1,
-        });
-      }
+      // if (userProfile.freeRidesRemaining > 0) {
+      //   await UserProfileService.update(userProfile._id, {
+      //     freeRidesRemaining: userProfile.freeRidesRemaining - 1,
+      //   });
+      // }
       const userId = userProfile.user.toString();
       const connectedUsers = getConnectedUsers();
       const io = getIO();
@@ -211,6 +211,7 @@ class RideService {
       if (ride.status === RIDE_STATUSES.COMPLETED) {
         throw new Error("Cannot cancel a completed ride");
       }
+      const userProfile = await UserProfileService.get(ride.userProfile);
 
       if (driverUserId && (ride.status === RIDE_STATUSES.ACCEPTED || ride.status === RIDE_STATUSES.STARTED)) {
         const rideModel = await Ride.findById(id)
@@ -231,8 +232,13 @@ class RideService {
             { $inc: { redeemPoints: -5 } }, // Decrease redeemPoints by 5
             { new: true, runValidators: true }
         );
+
+        if (userProfile.freeRidesRemaining > 0) {
+          await UserProfileService.update(userProfile._id, {
+            freeRidesRemaining: userProfile.freeRidesRemaining + 1,
+          });
+        }
       }
-      const userProfile = await UserProfileService.get(ride.userProfile);
       const userId = userProfile.user.toString();
       const io = getIO();
       const connectedUsers = getConnectedUsers();
@@ -301,7 +307,7 @@ class RideService {
 
       const driverId = driver._id.toString();
       const updatedRide = await Ride.findOneAndUpdate(
-        { _id: id, status: RIDE_STATUSES.ACCEPTED, driver: driverId }, // Added driver check
+        { _id: id, status: RIDE_STATUSES.STARTED, driver: driverId }, // Added driver check
         { status: RIDE_STATUSES.COMPLETED },
         { new: true }
       );
@@ -368,6 +374,50 @@ class RideService {
       return ignoredRides;
     } catch (err) {
       throw new DatabaseError(err);
+    }
+  }
+
+  static async updateRideStatus(rideId, newStatus) {
+    try {
+      const validStatuses = [RIDE_STATUSES.STARTED, RIDE_STATUSES.REACHED];
+      if (!validStatuses.includes(newStatus)) {
+        throw new Error("Invalid status update request.");
+      }
+
+      const ride = await Ride.findById(rideId).populate({
+        path: "userProfile",
+        populate: {
+          path: "user",
+          model: "User",
+        },
+      });
+
+      if (!ride) throw new Error("Ride not found");
+
+      const updatedRide = await Ride.findByIdAndUpdate(
+          rideId,
+          { status: newStatus },
+          { new: true }
+      );
+
+      const userId = ride.userProfile.user._id.toString();
+
+      const io = getIO();
+      const socketId = getConnectedUsers().get(userId);
+
+
+      if (socketId) {
+        io.to(socketId).emit("rideStatusUpdated", {
+          rideId: rideId,
+          status: newStatus,
+          message: `Your ride status is now "${newStatus}".`,
+        });
+        console.log(`Sent status update (${newStatus}) to user ${userId}`);
+      }
+
+      return updatedRide;
+    } catch (err) {
+      throw new Error(err.message || "Error updating ride status.");
     }
   }
 }

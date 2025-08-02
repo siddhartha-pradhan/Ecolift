@@ -84,6 +84,35 @@ const MainScreen = ({ navigation }) => {
   const [rideCompleted, setRideCompleted] = useState(false);
   const [rideCancelled, setRideCancelled] = useState(false);
   const [vehicleType, setVehicleType] = useState("2 Wheeler");
+  const [statusBar, setStatusBar] = useState("Accepted");
+
+  const [freeRide, setFreeRide] = useState(0);
+
+  useEffect(() => {
+    let intervalId;
+
+    const fetchUserData = async () => {
+      try {
+        const userName = await AsyncStorage.getItem("userEmail");
+        const user = await DriverService.getDriverById();
+        const userModel = user.find((x) => x.email === userName);
+        setFreeRide(userModel?.userProfile?.freeRidesRemaining || 0);
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+      }
+    };
+
+    // Initial fetch
+    fetchUserData();
+
+    // Setup interval to fetch every 3 seconds
+    intervalId = setInterval(() => {
+      fetchUserData();
+    }, 3000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
   const {
     updateRideData,
@@ -491,6 +520,11 @@ const MainScreen = ({ navigation }) => {
       setRideCancelled(true);
     });
 
+    socket.on("rideStatusUpdated", (data) => {
+      showSuccessToast(data.message);
+      setStatusBar(data.status);
+    });
+
     return () => {
       socket.off("rideAccepted");
       socket.off("rideCompleted");
@@ -622,7 +656,7 @@ const MainScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           {renderBookRideButton()}
-          {rideOngoingDataUser && rideOngoingDataUser.status == "accepted" && (
+          {rideOngoingDataUser && rideOngoingDataUser?.status === "accepted" && (
             <RideOngoingBanner
               pickupLocation={rideRequestData.pickupLocation}
               dropoffLocation={rideRequestData.dropoffLocation}
@@ -631,6 +665,7 @@ const MainScreen = ({ navigation }) => {
                 setRideBooked(false);
                 setRideStarted(false);
               }}
+              status={statusBar}
               rideDetails={rideOngoingDataUser}
               freeRidesRemaining={userData?.freeRidesRemaining}
             />
@@ -676,7 +711,7 @@ const MainScreen = ({ navigation }) => {
             style={styles.freeRidesPill}
             onPress={() => {
               showInfoToast(
-                `You have got ${userData?.user?.freeRidesRemaining} free rides remaining`
+                `You have got ${freeRide} free rides remaining`
               );
             }}
           >
@@ -687,7 +722,7 @@ const MainScreen = ({ navigation }) => {
               style={{ marginRight: 6 }}
             />
             <Text style={styles.pillText}>
-              Free Rides: {userData?.user?.freeRidesRemaining ?? 0}
+              Free Rides: {freeRide}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

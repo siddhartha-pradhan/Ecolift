@@ -163,7 +163,9 @@ const MainScreenRider = ({ navigation }) => {
   const [rideCompleted, setRideCompleted] = useState(false);
   const [rideCancelled, setRideCancelled] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [statusBar, setStatusBar] = useState("Accepted");
   const [isCanceling, setIsCanceled] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const slideAnim = useRef(new Animated.Value(-width * 0.8)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -265,6 +267,25 @@ const MainScreenRider = ({ navigation }) => {
     } catch (err) {
     } finally {
       setIsCompleting(false);
+    }
+  };
+
+  const updateRideStatus = async (status) => {
+    setIsUpdating(true);
+    try {
+      await RideService.updateRideStatus(
+          rideOngoingDataRider._id,
+          status
+      );
+      showSuccessToast(
+          `Successfully updated ride status for  ${
+              rideOngoingDataRider?.userProfile?.user?.name
+          } to ${status}`
+      );
+      setStatusBar(status);
+    } catch (err) {
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -456,7 +477,7 @@ const MainScreenRider = ({ navigation }) => {
         opacityAnim={opacityAnim}
         shadowAnim={shadowAnim}
       />
-      {rideOngoingDataRider && rideOngoingDataRider.status == "accepted" && (
+      {rideOngoingDataRider && (rideOngoingDataRider?.status === "accepted" || rideOngoingDataRider?.status === "started" || rideOngoingDataRider?.status === "reached" ) && (
         <RideOngoingBannerRider
           rideDetails={rideOngoingDataRider}
           onComplete={() => {
@@ -465,8 +486,13 @@ const MainScreenRider = ({ navigation }) => {
           onCancel={() => {
             cancelRide();
           }}
+          onUpdate={() => {
+            updateRideStatus(statusBar === "Accepted" ? "reached" : "started");
+          }}
+          status={statusBar}
           isCompleting={isCompleting}
           isCancelling={isCanceling}
+          isUpdating={isUpdating}
           rideAddress={rideAddress}
         />
       )}

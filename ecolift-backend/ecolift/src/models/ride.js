@@ -7,6 +7,7 @@ export const RIDE_STATUSES = {
   REQUESTED: 'requested', // when user books
   ACCEPTED: 'accepted',   // when driver accepts
   STARTED: 'started',     // when driver starts the ride
+  REACHED: 'reached',     // when driver starts the ride
   COMPLETED: 'completed',
   CANCELED: 'canceled'
 };

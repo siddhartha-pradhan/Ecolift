@@ -20,7 +20,6 @@ const RideCancelledPopup = ({
           <Text style={styles.label}>Driver Phone:</Text>
           <Text style={styles.value}>{driver?.user?.phonenumber}</Text>
 
-
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.rejectButton} onPress={onClose}>
               <Text style={styles.buttonText}>Close</Text>

@@ -143,6 +143,18 @@ class RideService {
     } catch (err) {
     }
   }
+
+  static async updateRideStatus(rideId, status) {
+    try {
+      const response = await api.post(`/ride/${rideId}/status`, {
+        newStatus: status,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error updating ride status:", error);
+      throw error;
+    }
+  }
 }
 
 export default RideService;

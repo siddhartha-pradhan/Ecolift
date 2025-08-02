@@ -16,7 +16,7 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const RideOngoingBannerRider = ({ rideDetails, onComplete, onCancel, isCompleting, isCancelling, rideAddress }) => {
+const RideOngoingBannerRider = ({ rideDetails, onComplete, onCancel, status, isCompleting, isCancelling, onUpdate, isUpdating, rideAddress }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   if (!rideDetails) return null;
@@ -46,17 +46,37 @@ const RideOngoingBannerRider = ({ rideDetails, onComplete, onCancel, isCompletin
               <Text style={styles.value}>{rideAddress.dropoff}</Text>
 
               <Text style={styles.label}>Status</Text>
-              <Text style={styles.value}>{rideDetails?.status}</Text>
+              <Text style={styles.value}>{status}</Text>
 
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.completeButton} onPress={onComplete}>
-                  {isCompleting ? (
-                      <ActivityIndicator color="#fff" />
-                  ) : (
-                      <Text style={styles.buttonText}>Complete Ride</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
+              {
+                  status === "started" && (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.completeButton} onPress={onComplete}>
+                            {isCompleting ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Complete Ride</Text>
+                            )}
+                          </TouchableOpacity>
+                    </View>
+                  )
+              }
+
+              {
+                  (status === "Accepted" || status === "reached") && (
+                      <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.completeButton} onPress={onUpdate}>
+                          {isUpdating ? (
+                              <ActivityIndicator color="#fff" />
+                          ) : (
+                              <Text style={styles.buttonText}>
+                                {status === "Accepted" ? "Reach Pickup" : "Start Ride"}
+                              </Text>
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                  )
+              }
 
               <TouchableOpacity
                   style={styles.cancelButton}
@@ -113,6 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 20,
+    marginBottom: 20
   },
   completeButton: {
     backgroundColor: "#4CAF50",
@@ -130,5 +151,6 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     flex: 1,
+    marginBottom: 20
   },
 });
