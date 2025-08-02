@@ -193,29 +193,6 @@ const LocationDrawerScreen = ({
               ))}
             </View>
 
-            {/* Date Picker for Premium Users */}
-            {userData.user.isPremium && (
-                <View style={{ marginTop: 10, marginBottom: 15 }}>
-                  <TouchableOpacity
-                      style={styles.inputWrapper}
-                      onPress={() => setOpen(true)}
-                  >
-                    <Ionicons name="calendar-outline" size={20} color="#333" />
-                    <Text style={styles.input}>{date.toDateString()}</Text>
-                  </TouchableOpacity>
-
-                  {open && (
-                      <DateTimePicker
-                          testID="dateTimePicker"
-                          value={date}
-                          mode="date"
-                          display="default"
-                          onChange={onChange}
-                      />
-                  )}
-                </View>
-            )}
-
             {/* Search Button */}
             <TouchableOpacity
                 style={[

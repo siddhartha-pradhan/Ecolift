@@ -81,30 +81,43 @@ const AdminOrdersPage = () => {
                             <th>Order ID</th>
                             <th>User</th>
                             <th>Total</th>
-                            <th>Claim Code</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {orders.map((order) => (
-                            <tr key={order._id}>
-                                <td>{order._id}</td>
-                                <td>{order.userId?.name || "-"}</td>
-                                <td>${order.totalAmount}</td>
-                                <td>{order.claimCode}</td>
-                                <td>{order.isClaimed ? "Claimed" : "Pending"}</td>
-                                <td>
-                                    {!order.isClaimed && (
-                                        <button
-                                            className="edit-button"
-                                            onClick={() => openModal(order)}
-                                        >
-                                            Claim
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
+                            <React.Fragment key={order._id}>
+                                <tr>
+                                    <td>{order._id}</td>
+                                    <td>{order.userId?.name || "-"}</td>
+                                    <td>{order.totalAmount} Points</td>
+                                    <td>{order.isClaimed ? "Claimed" : "Pending"}</td>
+                                    <td>
+                                        {!order.isClaimed && (
+                                            <button
+                                                className="edit-button"
+                                                onClick={() => openModal(order)}
+                                            >
+                                                Claim
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="5" style={{ backgroundColor: "#f9f9f9", paddingLeft: "1rem" }}>
+                                        <strong>Items:</strong>
+                                        <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                                            {order.orderDetails.map((detail, index) => (
+                                                <li key={index}>
+                                                    {detail.itemId?.name || "Unnamed Item"} – Qty: {detail.quantity}
+                                                    {detail.price != null && ` – ${detail.price} Points`}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </React.Fragment>
                         ))}
                         </tbody>
                     </table>

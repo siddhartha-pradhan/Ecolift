@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ItemService from "../../services/ItemService";
 import DriverService from "../../services/DriverService";
 import {useToast} from "../../context/ToastContext";
+import { REACT_APP_API_URL } from "@env";
 
 const { width } = Dimensions.get("window");
 
@@ -138,24 +139,29 @@ const StoreScreen = () => {
   }, [isDrawerOpen]);
 
   const handleDecreaseQuantity = (itemId) => {
-    setCartItems(prevCart => {
-      const updatedCart = prevCart.map(item => {
-        if (item._id === itemId) {
-          return {
-            ...item,
-            quantity: item.quantity > 1 ? item.quantity - 1 : item.quantity,
-          };
-        }
-        return item;
-      }).filter(item => item.quantity > 0); // remove item if quantity becomes 0
+    setCartItems((prevCart) => {
+      const updatedCart = prevCart
+          .map((item) => {
+            if (item._id === itemId) {
+              // Refund points
+              setRedeemPoints((prev) => prev + item.price);
+
+              // Decrease quantity
+              return {
+                ...item,
+                quantity: item.quantity - 1,
+              };
+            }
+            return item;
+          })
+          .filter((item) => item.quantity > 0); // remove items with 0 quantity
 
       return updatedCart;
     });
 
-    // Optional: refund points when decreasing quantity
     const item = cartItems.find(i => i._id === itemId);
     if (item) {
-      setRedeemPoints(prev => prev + item.price);
+      setRedeemPoints(redeemPoints + item.price);
     }
   };
 
@@ -167,13 +173,15 @@ const StoreScreen = () => {
       quantity: item.quantity,
     }));
 
-    const token = await AsyncStorage.getItem("token"); // ✅ Async way
+    const token = await AsyncStorage.getItem("token");
 
     try {
       const totalPoints = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
       await ItemService.reduceRedeemPoints(userData?._id, totalPoints, true)
 
-      const res = await fetch('http://192.168.1.67:3001/api/v1/order', {
+      const apiUrl = REACT_APP_API_URL;
+
+      const res = await fetch(`${apiUrl}/api/v1/order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

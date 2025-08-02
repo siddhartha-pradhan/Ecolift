@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DriverService from "../../services/DriverService";
 import { Ionicons } from "@expo/vector-icons";
 import DrawerScreenRider from "./DrawerScreenRider";
+import { REACT_APP_API_URL } from "@env";
 
 const UserOrdersScreen = () => {
     const [orders, setOrders] = useState([]);
@@ -57,7 +58,9 @@ const UserOrdersScreen = () => {
                     setUserData(user);
                     const token = await AsyncStorage.getItem("token");
 
-                    const res = await fetch("http://192.168.1.67:3001/api/v1/order/user", {
+                    const apiUrl = REACT_APP_API_URL;
+
+                    const res = await fetch(`${apiUrl}/api/v1/order/user`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "700",
         color: "#008080",
-        marginTop: 50,
+        marginTop: 350,
         marginBottom: 10,
         textAlign: "center",
     },

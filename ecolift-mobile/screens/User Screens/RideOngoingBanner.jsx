@@ -111,6 +111,9 @@ const RideOngoingBanner = ({
           <Text style={styles.label}>Phone number:</Text>
           <Text style={styles.value}>{rideDetails?.driver?.user?.phonenumber}</Text>
 
+          <Text style={styles.label}>Status</Text>
+          <Text style={styles.value}>{rideDetails?.status}</Text>
+
           <Text style={styles.label}>Vehicle Type:</Text>
           <Text style={styles.value}>{rideDetails?.driver?.vehicleDetails}</Text>
 

@@ -130,8 +130,6 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  console.log(rideRequestData);
-
   useEffect(() => {
     let subscription = null;
     (async () => {

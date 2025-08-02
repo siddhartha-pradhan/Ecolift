@@ -75,7 +75,6 @@ const RideBookScreenRider = () => {
       // @ts-ignore
       requestedRides = requestedRides.filter((val)=> !declineRideIds.includes(val._id) && val.vehicleType === driverData?.driverProfile?.vehicleDetails);
       setRideRequests(requestedRides);
-      console.log(requestedRides);
     } catch (err) {
       showErrorToast("Error fetching rides");
     }

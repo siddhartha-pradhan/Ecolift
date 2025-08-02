@@ -1,12 +1,9 @@
 // services/Api.jsx
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ React Native compatible storage
+import { REACT_APP_API_URL } from "@env";
 
-//const token = await AsyncStorage.getItem("token");
-
-//console.log("📦 Retrieved token from axios:", token);
-
-export const BASE_URL = "http://192.168.1.67:3001";
+export const BASE_URL = REACT_APP_API_URL;
 
 // Create an Axios instance with base URL including /api/v1
 const api = axios.create({
