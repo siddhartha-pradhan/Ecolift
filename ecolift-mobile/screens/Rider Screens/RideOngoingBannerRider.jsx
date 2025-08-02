@@ -45,12 +45,6 @@ const RideOngoingBannerRider = ({ rideDetails, onComplete, onCancel, isCompletin
               <Text style={styles.label}>Dropoff:</Text>
               <Text style={styles.value}>{rideAddress.dropoff}</Text>
 
-              <Text style={styles.label}>Fare:</Text>
-              <Text style={styles.value}>
-                ${rideDetails.fare?.toFixed(2) || "N/A"}{" "}
-                {rideDetails?.userProfile?.freeRidesRemaining > 0 && "(Free)"}
-              </Text>
-
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.completeButton} onPress={onComplete}>
                   {isCompleting ? (

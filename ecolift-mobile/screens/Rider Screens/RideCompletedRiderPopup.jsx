@@ -30,12 +30,8 @@ const RideCompletedRiderPopup = ({ visible, onClose, userProfile, fare, pointsRe
           <Text style={styles.label}>User's Phone:</Text>
           <Text style={styles.value}>{userProfile?.user?.phonenumber}</Text>
 
-          <Text style={styles.label}>Fare:</Text>
-          <Text style={styles.value}>{fare}</Text>
-
           <Text style={styles.cashNote}>
-            💵 Collect Cash Payment – Passenger will pay in cash, no digital
-            gateway available at the moment
+            💵 You have earned {pointsRedeemed} points worth of Rs {fare} for this ride.
           </Text>
 
           <View style={styles.buttonContainer}>

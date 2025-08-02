@@ -26,9 +26,7 @@ const RideCompletedPopup = ({
           <Text style={styles.value}>{fare}</Text>
 
           <Text style={styles.cashNote}>
-            {freeRidesRemaining > 0
-              ? "You do not need to pay you have used your free rides"
-              : "💵 Pay via Cash – We do not support any payment gateway at the moment"}
+            You have completed your ride worth of Rs {fare}.
           </Text>
 
       

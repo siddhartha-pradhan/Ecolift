@@ -479,7 +479,7 @@ const MainScreen = ({ navigation }) => {
               : 0,
         },
       });
-      showSuccessToast("Ride Accepted by driver jhola");
+      showSuccessToast("Ride Accepted by driver.");
     });
 
     socket.on("rideCompleted", (data) => {

@@ -119,11 +119,6 @@ const RideOngoingBanner = ({
 
           <Text style={styles.label}>Dropoff:</Text>
           <Text style={styles.value}>{rideAddress.dropoff || dropoffLocation}</Text>
-
-          <Text style={styles.label}>Fare:</Text>
-          <Text style={styles.value}>
-            ${fare || "N/A"} {freeRidesRemaining > 0 && "(Free)"}
-          </Text>
         </Animated.View>
       </>
   );

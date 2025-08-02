@@ -479,7 +479,7 @@ const MainScreenRider = ({ navigation }) => {
             setRideCompleted(false);
           }}
           userProfile={rideOngoingDataRider?.userProfile}
-          fare={rideOngoingDataRider?.fare}
+          fare={rideOngoingDataRider?.fare ?? 0}
         />
       )}
       {rideCancelled && (

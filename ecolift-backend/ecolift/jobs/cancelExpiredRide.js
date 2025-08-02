@@ -9,36 +9,33 @@ function getNepalTimeNow() {
 
 cron.schedule('* * * * *', async () => {
     const nowNepal = getNepalTimeNow();
-
     const normalExpiryTime = new Date(nowNepal.getTime() - 10 * 60 * 1000);
-
     const preBookedExpiryTime = new Date(nowNepal.getTime() - 10 * 60 * 1000);
 
     try {
-        const expiredNormalRides = await Ride.find({
-            status: RIDE_STATUSES.REQUESTED,
-            isPreBooked: false,
-            createdAt: { $lt: normalExpiryTime },
-        });
-
-        for (const ride of expiredNormalRides) {
-            console.log(`Auto-cancelling normal ride ${ride._id} with time ${ride.createdAt}`);
-            ride.status = RIDE_STATUSES.CANCELED;
-            await ride.save();
-        }
-
-        const expiredPreBookedRides = await Ride.find({
-            status: RIDE_STATUSES.REQUESTED,
-            isPreBooked: true,
-            preBookedDate: { $lt: preBookedExpiryTime },
-        });
-
-        for (const ride of expiredPreBookedRides) {
-            console.log(`Auto-cancelling pre-booked ride ${ride._id} with time ${ride.createdAt}`);
-            ride.status = RIDE_STATUSES.CANCELED;
-            await ride.save();
-        }
-
+        // const expiredNormalRides = await Ride.find({
+        //     status: RIDE_STATUSES.REQUESTED,
+        //     isPreBooked: false,
+        //     createdAt: { $lt: normalExpiryTime },
+        // });
+        //
+        // for (const ride of expiredNormalRides) {
+        //     console.log(`Auto-cancelling normal ride ${ride._id} with time ${ride.createdAt}`);
+        //     ride.status = RIDE_STATUSES.CANCELED;
+        //     await ride.save();
+        // }
+        //
+        // const expiredPreBookedRides = await Ride.find({
+        //     status: RIDE_STATUSES.REQUESTED,
+        //     isPreBooked: true,
+        //     preBookedDate: { $lt: preBookedExpiryTime },
+        // });
+        //
+        // for (const ride of expiredPreBookedRides) {
+        //     console.log(`Auto-cancelling pre-booked ride ${ride._id} with time ${ride.createdAt}`);
+        //     ride.status = RIDE_STATUSES.CANCELED;
+        //     await ride.save();
+        // }
     } catch (error) {
         console.error('Error auto-cancelling rides:', error);
     }

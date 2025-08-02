@@ -14,8 +14,8 @@ cron.schedule('0 0 * * *', async () => {
             freeRidesRemaining: {
               $cond: {
                 if: '$isPremium',
-                then: 3, // Premium users get 3 rides
-                else: 1, // Normal users get 1 ride
+                then: 3,
+                else: 1,
               },
             },
           },
