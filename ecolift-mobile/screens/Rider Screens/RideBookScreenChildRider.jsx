@@ -116,7 +116,6 @@ const RideBookScreenChildRider = ({ request, acceptRide, declineRide }) => {
           <Text style={styles.rideBoxText}>
             Vehicle Type: {request?.vehicleType?.toString()}
           </Text>
-          <Text style={styles.rideBoxText}>Fare: Rs:{request?.fare?.toString()}</Text>
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>

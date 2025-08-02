@@ -22,14 +22,9 @@ const RideCompletedPopup = ({
           <Text style={styles.label}>Driver Phone:</Text>
           <Text style={styles.value}>{driver?.user?.phonenumber}</Text>
 
-          <Text style={styles.label}>Fare:</Text>
-          <Text style={styles.value}>{fare}</Text>
-
           <Text style={styles.cashNote}>
-            You have completed your ride worth of Rs {fare}.
+            You have completed your FREE ride worth of Rs {fare}.
           </Text>
-
-      
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.rejectButton} onPress={onClose}>
