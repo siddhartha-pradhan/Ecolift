@@ -636,7 +636,7 @@ const MainScreen = ({ navigation }) => {
             />
           )}
 
-          {rideCompleted && rideOngoingDataUser.status == "completed" && (
+          {rideCompleted && (
             <RideCompletedPopup
               driver={rideOngoingDataUser?.driver}
               fare={rideRequestData?.fare}
@@ -655,7 +655,7 @@ const MainScreen = ({ navigation }) => {
               } }        />
           )}
 
-          {rideCancelled && rideOngoingDataUser.status == "canceled" &&  (
+          {rideCancelled && (
               <RideCancelledPopup
                   driver={rideOngoingDataUser?.driver}
                   visible={true}
