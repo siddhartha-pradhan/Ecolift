@@ -10,11 +10,12 @@ class ItemService {
         }
     }
 
-    static async reduceRedeemPoints(userId, amount) {
+    static async reduceRedeemPoints(userId, amount, isDeducted) {
         try {
             const response = await api.post("/item/redeem", {
                 userId,
-                amount
+                amount,
+                isDeducted
             });
             return response.data;
         } catch (err) {

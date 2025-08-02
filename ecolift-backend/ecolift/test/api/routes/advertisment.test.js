@@ -2,10 +2,10 @@ import supertest from 'supertest';
 import { jest } from '@jest/globals'; // eslint-disable-line
 
 import app from '../../../src/app.js';
-import AdvertismentService from '../../../src/services/advertisment.js';
+import AdvertismentService from '../../../src/services/advertisement.js';
 import UserService from '../../../src/services/user.js';
 
-jest.mock('../../../src/services/advertisment.js');
+jest.mock('../../../src/services/advertisement.js');
 jest.mock('../../../src/services/user.js');
 
 UserService.authenticateWithToken = jest.fn().mockResolvedValue({ email: 'test@example.com' });

@@ -83,8 +83,17 @@ const AdminLayout = () => {
                     to="/items"
                     className={({ isActive }) => (isActive ? "active" : "")}
                 >
-                  <div className="nav-icon riders-icon"></div>
+                  <div className="nav-icon items-icon"></div>
                   <span>Items</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                    to="/orders"
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  <div className="nav-icon orders-icon"></div>
+                  <span>Orders</span>
                 </NavLink>
               </li>
             </ul>

@@ -29,6 +29,7 @@ import RideHistoryScreenRider from "./screens/Rider Screens/RideHistoryScreenRid
 import RiderInfoScreen from "./screens/Rider Screens/RiderInfoScreen";
 import SignupScreenRider from "./screens/Rider Screens/SignupScreenRider";
 import StoreScreen from "./screens/Rider Screens/StoreScreen";
+import UserOrdersScreen from "./screens/Rider Screens/UserOrdersScreen";
 import SupportScreenRider from "./screens/Rider Screens/SupportScreenRider";
 import VerificationScreenRider from "./screens/Rider Screens/VerificationScreenRider";
 import WelcomeScreenRider from "./screens/Rider Screens/WelcomeScreenRider";
@@ -103,6 +104,7 @@ const App = () => {
             />
             <Stack.Screen name="MainScreenRider" component={MainScreenRider} />
             <Stack.Screen name="StoreScreen" component={StoreScreen} />
+            <Stack.Screen name="UserOrdersScreen" component={UserOrdersScreen} />
             <Stack.Screen
               name="RideHistoryScreenRider"
               component={RideHistoryScreenRider}

@@ -24,6 +24,9 @@ export default {
   item: {
     path: '/item',
   },
+  order: {
+    path: '/order',
+  },
   rideHistory: {
     path: '/ride-history',
   },

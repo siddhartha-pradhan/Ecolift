@@ -46,13 +46,12 @@ class ItemService {
         }
     }
 
-    static async reduceRedeemPoints(userId, amount) {
+    static async reduceRedeemPoints(userId, amount, isDeducted) {
         if (!userId || !amount || isNaN(amount) || amount <= 0) {
             throw new DatabaseError("Invalid userId or amount");
         }
 
         try {
-            console.log(userId);
             const userProfile = await UserProfile.findOne({ user: userId }).exec();
             if (!userProfile) {
                 throw new DatabaseError("UserProfile not found");
@@ -62,7 +61,12 @@ class ItemService {
                 throw new DatabaseError("Not enough redeem points");
             }
 
-            userProfile.redeemPoints -= amount;
+            if (isDeducted) {
+                userProfile.redeemPoints -= amount;
+            }
+            else {
+                userProfile.redeemPoints += amount;
+            }
             await userProfile.save();
 
             return userProfile;

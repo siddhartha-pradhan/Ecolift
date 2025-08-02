@@ -42,6 +42,11 @@ const menuItems = [
     screen: "StoreScreen",
   },
   {
+    label: "Orders",
+    icon: <MaterialCommunityIcons name="check-circle-outline" size={22} color="#000" />,
+    screen: "UserOrdersScreen",
+  },
+  {
     label: "Ride History",
     icon: <MaterialIcons name="history" size={22} color="#000" />,
     screen: "RideHistoryScreenRider",

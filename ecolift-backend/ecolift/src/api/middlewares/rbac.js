@@ -8,7 +8,7 @@ const permissions = {
     "ride:put",
     "ride:get",
     "driver:get",
-    "advertisment:get",
+    "advertisement:get",
   ],
   Premium: [
     "user-profile:post",
@@ -17,7 +17,7 @@ const permissions = {
     "ride:get",
     "ride:put",
     "driver:get",
-    "advertisment:get",
+    "advertisement:get",
   ],
   Driver: [
     "user-profile:post",
@@ -27,7 +27,7 @@ const permissions = {
     "ride:get",
     "driver:get",
     "driver:post",
-    "advertisment:get",
+    "advertisement:get",
     "redeempoints-history:get",
     "*",
     "item:post"

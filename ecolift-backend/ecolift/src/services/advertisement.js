@@ -1,10 +1,10 @@
-import Advertisment from '../models/advertisment.js';
+import Advertisement from '../models/advertisement.js';
 import DatabaseError from '../models/error.js';
 
-class AdvertismentService {
+class AdvertisementService {
   static async list() {
     try {
-      return Advertisment.find();
+      return Advertisement.find();
     } catch (err) {
       throw new DatabaseError(err);
     }
@@ -12,7 +12,7 @@ class AdvertismentService {
 
   static async get(id) {
     try {
-      return await Advertisment.findOne({ _id: id }).exec();
+      return await Advertisement.findOne({ _id: id }).exec();
     } catch (err) {
       throw new DatabaseError(err);
     }
@@ -20,7 +20,7 @@ class AdvertismentService {
 
   static async create(data) {
     try {
-      const obj = new Advertisment(data);
+      const obj = new Advertisement(data);
       await obj.save();
       return obj;
     } catch (err) {
@@ -30,7 +30,7 @@ class AdvertismentService {
 
   static async update(id, data) {
     try {
-      return await Advertisment.findOneAndUpdate({ _id: id }, data, { new: true, upsert: false });
+      return await Advertisement.findOneAndUpdate({ _id: id }, data, { new: true, upsert: false });
     } catch (err) {
       throw new DatabaseError(err);
     }
@@ -38,7 +38,7 @@ class AdvertismentService {
 
   static async delete(id) {
     try {
-      const result = await Advertisment.deleteOne({ _id: id }).exec();
+      const result = await Advertisement.deleteOne({ _id: id }).exec();
       return (result.deletedCount === 1);
     } catch (err) {
       throw new DatabaseError(err);
@@ -46,4 +46,4 @@ class AdvertismentService {
   }
 }
 
-export default AdvertismentService;
+export default AdvertisementService;

@@ -33,6 +33,7 @@ const ItemsPage = () => {
         initialValues: {
             name: "",
             price: "",
+            quantity: 0,
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -42,6 +43,10 @@ const ItemsPage = () => {
                 .typeError("Price must be a number")
                 .min(0, "Price can't be negative")
                 .required("Price is required"),
+            quantity: Yup.number()
+                .typeError("Quantity must be a number")
+                .min(0, "Quantity can't be negative")
+                .required("Quantity is required"),
         }),
         onSubmit: async (values) => {
             try {
@@ -50,6 +55,7 @@ const ItemsPage = () => {
                     await ItemService.updateItem(editingItemId, {
                         name: values.name,
                         price: Number(values.price),
+                        quantity: Number(values.quantity),
                     });
                     toast.success("Item updated successfully");
                 } else {
@@ -57,6 +63,7 @@ const ItemsPage = () => {
                     await ItemService.createItem({
                         name: values.name,
                         price: Number(values.price),
+                        quantity: Number(values.quantity),
                     });
                     toast.success("Item created successfully");
                 }
@@ -75,6 +82,7 @@ const ItemsPage = () => {
             formik.setValues({
                 name: item.name,
                 price: item.price.toString(),
+                quantity: item.quantity.toString()
             });
         } else {
             setEditingItemId(null);
@@ -129,6 +137,7 @@ const ItemsPage = () => {
                         <tr>
                             <th>Name</th>
                             <th>Price ($)</th>
+                            <th>Quantity</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -137,6 +146,7 @@ const ItemsPage = () => {
                             <tr key={item._id || item.id}>
                                 <td>{item.name}</td>
                                 <td>{item.price.toFixed(2)}</td>
+                                <td>{item.quantity}</td>
                                 <td>
                                     <button
                                         className="edit-button"
@@ -201,6 +211,23 @@ const ItemsPage = () => {
                                 />
                                 {formik.touched.price && formik.errors.price ? (
                                     <div className="error">{formik.errors.price}</div>
+                                ) : null}
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="quantity">Quantity</label>
+                                <input
+                                    id="quantity"
+                                    name="quantity"
+                                    type="number"
+                                    step="1"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.quantity}
+                                    className={formik.touched.quantity && formik.errors.quantity ? "input-error" : ""}
+                                />
+                                {formik.touched.quantity && formik.errors.quantity ? (
+                                    <div className="error">{formik.errors.quantity}</div>
                                 ) : null}
                             </div>
 

@@ -221,10 +221,10 @@ router.delete('/:id', requireValidId, async (req, res, next) => {
  *         description: Bad request or insufficient points
  */
 router.post('/redeem', async (req, res, next) => {
-    const { userId, amount } = req.body;
+    const { userId, amount, isDeducted } = req.body;
 
     try {
-        const result = await ItemService.reduceRedeemPoints(userId, amount);
+        const result = await ItemService.reduceRedeemPoints(userId, amount, isDeducted);
         res.status(200).json({
             message: 'Redeem points deducted',
             data: result,

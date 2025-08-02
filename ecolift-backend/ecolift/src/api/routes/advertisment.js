@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import AdvertismentService from '../../services/advertisment.js';
+import AdvertisementService from '../../services/advertisement.js';
 import { requireUser } from '../middlewares/auth.js';
 import { requireSchema, requireValidId } from '../middlewares/validate.js';
-import schema from '../schemas/advertisment.js';
+import schema from '../schemas/advertisement.js';
 
 const router = Router();
 
@@ -12,28 +12,28 @@ router.use(requireUser);
 /** @swagger
  *
  * tags:
- *   name: Advertisment
- *   description: API for managing Advertisment objects
+ *   name: Advertisement
+ *   description: API for managing Advertisement objects
  *
- * /advertisment:
+ * /advertisement:
  *   get:
- *     tags: [Advertisment]
- *     summary: Get all the Advertisment objects
+ *     tags: [Advertisement]
+ *     summary: Get all the Advertisement objects
  *     security:
  *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: List of Advertisment objects
+ *         description: List of Advertisement objects
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Advertisment'
+ *                 $ref: '#/components/schemas/Advertisement'
  */
 router.get('', async (req, res, next) => {
   try {
-    const results = await AdvertismentService.list();
+    const results = await AdvertisementService.list();
     res.json(results);
   } catch (error) {
     if (error.isClientError()) {
@@ -46,10 +46,10 @@ router.get('', async (req, res, next) => {
 
 /** @swagger
  *
- * /advertisment:
+ * /advertisement:
 *   post:
- *     tags: [Advertisment]
- *     summary: Create a new Advertisment
+ *     tags: [Advertisement]
+ *     summary: Create a new Advertisement
  *     security:
  *       - BearerAuth: []
  *     requestBody:
@@ -57,18 +57,18 @@ router.get('', async (req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Advertisment'
+ *             $ref: '#/components/schemas/Advertisement'
  *     responses:
  *       201:
- *         description: The created Advertisment object
+ *         description: The created Advertisement object
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Advertisment'
+ *               $ref: '#/components/schemas/Advertisement'
  */
 router.post('', requireSchema(schema), async (req, res, next) => {
   try {
-    const obj = await AdvertismentService.create(req.validatedBody);
+    const obj = await AdvertisementService.create(req.validatedBody);
     res.status(201).json(obj);
   } catch (error) {
     if (error.isClientError()) {
@@ -81,10 +81,10 @@ router.post('', requireSchema(schema), async (req, res, next) => {
 
 /** @swagger
  *
- * /advertisment/{id}:
+ * /advertisement/{id}:
  *   get:
- *     tags: [Advertisment]
- *     summary: Get a Advertisment by id
+ *     tags: [Advertisement]
+ *     summary: Get a Advertisement by id
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -95,15 +95,15 @@ router.post('', requireSchema(schema), async (req, res, next) => {
  *           type: string
  *     responses:
  *       200:
- *         description: Advertisment object with the specified id
+ *         description: Advertisement object with the specified id
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Advertisment'
+ *               $ref: '#/components/schemas/Advertisement'
  */
 router.get('/:id', requireValidId, async (req, res, next) => {
   try {
-    const obj = await AdvertismentService.get(req.params.id);
+    const obj = await AdvertisementService.get(req.params.id);
     if (obj) {
       res.json(obj);
     } else {
@@ -120,10 +120,10 @@ router.get('/:id', requireValidId, async (req, res, next) => {
 
 /** @swagger
  *
- * /advertisment/{id}:
+ * /advertisement/{id}:
  *   put:
- *     tags: [Advertisment]
- *     summary: Update Advertisment with the specified id
+ *     tags: [Advertisement]
+ *     summary: Update Advertisement with the specified id
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -137,18 +137,18 @@ router.get('/:id', requireValidId, async (req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Advertisment'
+ *             $ref: '#/components/schemas/Advertisement'
  *     responses:
  *       200:
- *         description: The updated Advertisment object
+ *         description: The updated Advertisement object
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Advertisment'
+ *               $ref: '#/components/schemas/Advertisement'
  */
 router.put('/:id', requireValidId, requireSchema(schema), async (req, res, next) => {
   try {
-    const obj = await AdvertismentService.update(req.params.id, req.validatedBody);
+    const obj = await AdvertisementService.update(req.params.id, req.validatedBody);
     if (obj) {
       res.status(200).json(obj);
     } else {
@@ -165,10 +165,10 @@ router.put('/:id', requireValidId, requireSchema(schema), async (req, res, next)
 
 /** @swagger
  *
- * /advertisment/{id}:
+ * /advertisement/{id}:
  *   delete:
- *     tags: [Advertisment]
- *     summary: Delete Advertisment with the specified id
+ *     tags: [Advertisement]
+ *     summary: Delete Advertisement with the specified id
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -183,7 +183,7 @@ router.put('/:id', requireValidId, requireSchema(schema), async (req, res, next)
  */
 router.delete('/:id', requireValidId, async (req, res, next) => {
   try {
-    const success = await AdvertismentService.delete(req.params.id);
+    const success = await AdvertisementService.delete(req.params.id);
     if (success) {
       res.status(204).send();
     } else {

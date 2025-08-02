@@ -12,7 +12,7 @@ import rideSchema from './schemas/ride.js';
 import driverSchema from './schemas/driver.js';
 import rideHistorySchema from './schemas/ridehistory.js';
 import adminVerificationSchema from './schemas/adminverification.js';
-import advertismentSchema from './schemas/advertisment.js';
+import advertisementSchema from './schemas/advertisement.js';
 import redeemPointsHistorySchema from './schemas/redeempointshistory.js';
 import subscriptionSchema from './schemas/subscription.js';
 
@@ -36,7 +36,7 @@ export const definition = {
         Driver: driverSchema,
         RideHistory: rideHistorySchema,
         AdminVerification: adminVerificationSchema,
-        Advertisment: advertismentSchema,
+        Advertisement: advertisementSchema,
         RedeemPointsHistory: redeemPointsHistorySchema,
         Subscription: subscriptionSchema,
         loginSchema,

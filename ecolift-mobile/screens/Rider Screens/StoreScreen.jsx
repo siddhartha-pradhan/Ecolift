@@ -32,6 +32,10 @@ const StoreScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
 
+  const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartSlideAnim = useRef(new Animated.Value(width)).current;
+
   // Fetch all items from API
   const fetchItems = async () => {
     try {
@@ -63,11 +67,40 @@ const StoreScreen = () => {
 
       setRedeemPoints(redeemPoints - price);
 
-      await ItemService.reduceRedeemPoints(userData?._id, price)
+      setCartItems(prevCart => {
+        const existingIndex = prevCart.findIndex(ci => ci._id === item._id);
+
+        if (existingIndex !== -1) {
+          const updatedCart = [...prevCart];
+          updatedCart[existingIndex].quantity += 1;
+          return updatedCart;
+        } else {
+          return [...prevCart, { ...item, quantity: 1 }];
+        }
+      });
+
+      openCartDrawer();
     }
     // You can replace the alert with any navigation or action
   };
 
+
+  const openCartDrawer = () => {
+    setIsCartOpen(true);
+    Animated.timing(cartSlideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeCartDrawer = () => {
+    Animated.timing(cartSlideAnim, {
+      toValue: width,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => setIsCartOpen(false));
+  };
 
   const [userData, setUserData] = useState();
   const [redeemPoints, setRedeemPoints] = useState(0);
@@ -104,18 +137,89 @@ const StoreScreen = () => {
     }
   }, [isDrawerOpen]);
 
+  const handleDecreaseQuantity = (itemId) => {
+    setCartItems(prevCart => {
+      const updatedCart = prevCart.map(item => {
+        if (item._id === itemId) {
+          return {
+            ...item,
+            quantity: item.quantity > 1 ? item.quantity - 1 : item.quantity,
+          };
+        }
+        return item;
+      }).filter(item => item.quantity > 0); // remove item if quantity becomes 0
+
+      return updatedCart;
+    });
+
+    // Optional: refund points when decreasing quantity
+    const item = cartItems.find(i => i._id === itemId);
+    if (item) {
+      setRedeemPoints(prev => prev + item.price);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!cartItems.length) return;
+
+    const orderDetails = cartItems.map(item => ({
+      itemId: item._id,
+      quantity: item.quantity,
+    }));
+
+    const token = await AsyncStorage.getItem("token"); // ✅ Async way
+
+    try {
+      const totalPoints = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      await ItemService.reduceRedeemPoints(userData?._id, totalPoints, true)
+
+      const res = await fetch('http://192.168.1.67:3001/api/v1/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ orderDetails }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        showSuccessToast("Order placed successfully!");
+        setCartItems([]);
+        closeCartDrawer();
+      } else {
+        alert(result.error || "Failed to place order");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred during checkout.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Header & Drawer Toggle */}
       <SafeAreaView style={styles.headerContainer}>
+        {/* Menu Button */}
         <TouchableOpacity
-          style={styles.menuButton}
-          onPress={toggleDrawer}
-          accessibilityLabel="Toggle drawer"
+            style={styles.menuButton}
+            onPress={toggleDrawer}
+            accessibilityLabel="Toggle drawer"
         >
           <Ionicons name="menu" size={24} color="black" />
         </TouchableOpacity>
+
+        {/* Cart Toggle Button */}
+        <TouchableOpacity
+            style={styles.cartButton}
+            onPress={isCartOpen ? closeCartDrawer : openCartDrawer}
+            accessibilityLabel="Toggle cart"
+        >
+          <Ionicons name="cart-outline" size={24} color="black" />
+        </TouchableOpacity>
       </SafeAreaView>
+
 
       {/* Main Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -140,7 +244,7 @@ const StoreScreen = () => {
             >
               <MaterialCommunityIcons name="gift" size={60} color="#008080" />
               <Text style={styles.itemText}>{item.name}</Text>
-              <Text style={styles.priceText}>${item.price}</Text>
+              <Text style={styles.priceText}>{item.price} Points</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -164,6 +268,56 @@ const StoreScreen = () => {
         opacityAnim={opacityAnim}
         shadowAnim={shadowAnim}
       />
+
+      {isCartOpen && (
+          <>
+            <TouchableOpacity
+                style={StyleSheet.absoluteFill}
+                onPress={closeCartDrawer}
+            />
+            <Animated.View
+                style={[
+                  styles.cartDrawer,
+                  { transform: [{ translateX: cartSlideAnim }] },
+                ]}
+            >
+              <Text style={styles.cartTitle}>Your Cart</Text>
+              <ScrollView contentContainerStyle={styles.cartContent}>
+                {cartItems.map((item, index) => (
+                    <View key={index} style={styles.cartItem}>
+                      <MaterialCommunityIcons name="gift" size={40} color="#008080" />
+                      <View style={{ marginLeft: 10, flex: 1 }}>
+                        <Text style={styles.itemText}>{item.name}</Text>
+                        <Text style={styles.priceText}>
+                          {item.price} × {item.quantity} = {item.price * item.quantity} Points
+                        </Text>
+                      </View>
+                      {/* Decrease Quantity Button */}
+                      <TouchableOpacity
+                          onPress={() => handleDecreaseQuantity(item._id)}
+                          style={styles.decreaseButton}
+                      >
+                        <Ionicons name="remove-circle-outline" size={24} color="red" />
+                      </TouchableOpacity>
+                    </View>
+                ))}
+              </ScrollView>
+              <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
+                <Text style={{ fontSize: 18, fontWeight: '600' }}>
+                  Total:
+                  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)} points
+                </Text>
+              </View>
+              <TouchableOpacity
+                  style={styles.checkoutButton}
+                  onPress={handleCheckout}
+              >
+                <Text style={styles.checkoutText}>Checkout</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </>
+      )}
+
     </View>
   );
 };
@@ -176,7 +330,30 @@ const styles = StyleSheet.create({
   headerContainer: {
     position: "absolute",
     top: Platform.OS === "android" ? StatusBar.currentHeight : 10,
-    left: 10,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    zIndex: 10,
+  },
+  cartButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    position: "absolute",
+    top: Platform.OS === "android" ? StatusBar.currentHeight : 10,
+    right: 10,
+    margin: 20,
     zIndex: 10,
   },
   menuButton: {
@@ -267,6 +444,51 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
+  },
+  cartDrawer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: width * 0.75,
+    backgroundColor: '#fff',
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: -2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+    zIndex: 999,
+  },
+  cartTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 20,
+    marginTop: 25,
+    color: '#008080',
+  },
+  cartContent: {
+    paddingBottom: 100,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  checkoutButton: {
+    marginTop: 20,
+    backgroundColor: '#008080',
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkoutText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 

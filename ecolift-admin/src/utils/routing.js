@@ -10,6 +10,7 @@ import Riders from "../pages/Riders";
 import ProtectedRoute from "./protectedRoute";
 import AdminLayout from "../layout/AdminLayout";
 import Items from "../pages/Items";
+import AdminOrderPage from "../pages/AdminOrderPage";
 // import Riders from "../pages/Riders";
 
 const Routing = () => {
@@ -30,7 +31,7 @@ const Routing = () => {
           <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/riders" element={<Riders />} />
             <Route path="/items" element={<Items />} />
-
+            <Route path="/orders" element={<AdminOrderPage />} />
         </Route>
       </Route>
     </Routes>

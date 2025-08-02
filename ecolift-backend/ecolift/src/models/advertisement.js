@@ -25,6 +25,6 @@ schema.post('update', handleDuplicateKeyError);
 schema.post('findOneAndUpdate', handleDuplicateKeyError);
 schema.post('insertMany', handleDuplicateKeyError);
 
-const Advertisment = mongoose.model('Advertisment', schema);
+const Advertisement = mongoose.model('Advertisement', schema);
 
-export default Advertisment;
+export default Advertisement;

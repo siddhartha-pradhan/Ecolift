@@ -8,6 +8,7 @@ import userProfileRouter from './userprofile.js';
 import rideRouter from './ride.js';
 import driverRouter from './driver.js';
 import itemRouter from './item.js';
+import orderRouter from './order.js';
 import rideHistoryRouter from './ridehistory.js';
 import adminVerificationRouter from './adminverification.js';
 import advertismentRouter from './advertisment.js';
@@ -53,6 +54,7 @@ router.use(urls.apiPrefix + urls.rideHistory.path, authorize(), rideHistoryRoute
 router.use(urls.apiPrefix + urls.ride.path, authorize(), rideRouter);
 router.use(urls.apiPrefix + urls.driver.path, authorize(), driverRouter);
 router.use(urls.apiPrefix + urls.item.path, authorize(), itemRouter);
+router.use(urls.apiPrefix + urls.order.path, authorize(), orderRouter);
 router.use(urls.apiPrefix + urls.advertisment.path, authorize(), advertismentRouter);
 router.use(urls.apiPrefix + urls.usersAll.path, authorize(), adminRouter);
 // Driver and Admin roles: Redeem Points History
