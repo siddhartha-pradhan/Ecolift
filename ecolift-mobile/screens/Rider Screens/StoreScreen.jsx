@@ -18,7 +18,7 @@ import ItemService from "../../services/ItemService";
 import DriverService from "../../services/DriverService";
 import {useToast} from "../../context/ToastContext";
 import { REACT_APP_API_URL } from "@env";
-
+import { useNavigation } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 
 const StoreScreen = () => {
@@ -27,6 +27,7 @@ const StoreScreen = () => {
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const shadowAnim = useRef(new Animated.Value(0)).current;
   const {showSuccessToast} = useToast()
+  const navigation = useNavigation();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,32 +60,37 @@ const StoreScreen = () => {
   };
 
   const handleItemPress = async (item, price) => {
+    const existingInCart = cartItems.find(ci => ci._id === item._id);
+    const currentQty = existingInCart ? existingInCart.quantity : 0;
+
     if (price > redeemPoints) {
-      alert(
-        `You do not have sufficient budget to purchase ${item.name}.`
-      );
-    } else {
-      showSuccessToast(`You have sufficient budget to purchase item ${item.name}. Please visit your nearest store.`);
-
-      setRedeemPoints(redeemPoints - price);
-
-      setCartItems(prevCart => {
-        const existingIndex = prevCart.findIndex(ci => ci._id === item._id);
-
-        if (existingIndex !== -1) {
-          const updatedCart = [...prevCart];
-          updatedCart[existingIndex].quantity += 1;
-          return updatedCart;
-        } else {
-          return [...prevCart, { ...item, quantity: 1 }];
-        }
-      });
-
-      openCartDrawer();
+      alert(`You do not have sufficient budget to purchase ${item.name}.`);
+      return;
     }
-    // You can replace the alert with any navigation or action
-  };
 
+    if (currentQty >= item.quantity) {
+      alert(`Cannot add more of ${item.name}. Only ${item.quantity} available.`);
+      return;
+    }
+
+    showSuccessToast(`You have sufficient budget to purchase ${item.name}. Please visit your nearest store.`);
+
+    setRedeemPoints(prev => prev - price);
+
+    setCartItems(prevCart => {
+      const existingIndex = prevCart.findIndex(ci => ci._id === item._id);
+
+      if (existingIndex !== -1) {
+        const updatedCart = [...prevCart];
+        updatedCart[existingIndex].quantity += 1;
+        return updatedCart;
+      } else {
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
+
+    openCartDrawer();
+  };
 
   const openCartDrawer = () => {
     setIsCartOpen(true);
@@ -196,6 +202,7 @@ const StoreScreen = () => {
         showSuccessToast("Order placed successfully!");
         setCartItems([]);
         closeCartDrawer();
+        navigation.navigate("UserOrdersScreen");
       } else {
         alert(result.error || "Failed to place order");
       }
@@ -204,6 +211,8 @@ const StoreScreen = () => {
       alert("An error occurred during checkout.");
     }
   };
+
+  console.log(items);
 
   return (
     <View style={styles.container}>
@@ -245,15 +254,18 @@ const StoreScreen = () => {
         {/* Item List Below Store Icon */}
         <View style={styles.itemsContainer}>
           {items.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.itemBox}
-              onPress={() => handleItemPress(item, item.price)} // Handle item click
-            >
-              <MaterialCommunityIcons name="gift" size={60} color="#008080" />
-              <Text style={styles.itemText}>{item.name}</Text>
-              <Text style={styles.priceText}>{item.price} Points</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                  key={index}
+                  style={styles.itemBox}
+                  onPress={() => handleItemPress(item, item.price)}
+              >
+                <MaterialCommunityIcons name="gift" size={60} color="#008080" />
+                <Text style={styles.itemText}>{item.name}</Text>
+                <Text style={styles.priceText}>{item.price} Points</Text>
+                <Text style={{ fontSize: 14, color: "#555", marginTop: 5 }}>
+                  In Stock: {item.quantity}
+                </Text>
+              </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
@@ -359,7 +371,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     position: "absolute",
-    top: Platform.OS === "android" ? StatusBar.currentHeight : 10,
     right: 10,
     margin: 20,
     zIndex: 10,
@@ -399,7 +410,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   itemBox: {
-    width: width * 0.4,
+    width: width * 0.5,
     height: 180,
     backgroundColor: "#f0f0f0",
     margin: 10,
@@ -434,7 +445,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   pointsBar: {
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 60 : 70,
+    marginTop: 20,
     marginHorizontal: 20,
     padding: 12,
     backgroundColor: "#008080",

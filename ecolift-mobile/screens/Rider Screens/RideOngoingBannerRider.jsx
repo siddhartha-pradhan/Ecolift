@@ -39,6 +39,9 @@ const RideOngoingBannerRider = ({ rideDetails, onComplete, onCancel, status, isC
               <Text style={styles.label}>User's Name:</Text>
               <Text style={styles.value}>{rideDetails?.userProfile?.user?.name}</Text>
 
+              <Text style={styles.label}>User's Phone:</Text>
+              <Text style={styles.value}>{rideDetails?.userProfile?.user?.phonenumber}</Text>
+
               <Text style={styles.label}>Pickup:</Text>
               <Text style={styles.value}>{rideAddress.pickup}</Text>
 

@@ -29,7 +29,7 @@ const Dashboard = () => {
   const fetchTotalUsers = async () => {
     try {
       const users = await UserService.getUsers();
-      const premiumUsers = users.filter((user) => user.role === "Admin");
+      const premiumUsers = users.filter((user) => user.userProfile?.isPremium);
       setTotalUsers(users.length);
       setTotalPremiumUsers(premiumUsers.length);
     } catch (err) {

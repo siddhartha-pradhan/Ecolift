@@ -40,6 +40,7 @@ import DriverService from "../../services/DriverService";
 import RideOngoingBanner from "./RideOngoingBanner";
 import RideCompletedPopup from "./RideCompletedPopup";
 import RideCancelledPopup from "./RideCancelledPopup";
+import { Linking } from "react-native";
 
 export const RIDE_STATUSES = {
   REQUESTED: "requested", // when user books
@@ -158,6 +159,7 @@ const MainScreen = ({ navigation }) => {
       return "Current Location";
     }
   };
+
 
   useEffect(() => {
     let subscription = null;
@@ -582,6 +584,13 @@ const MainScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
+
+      <TouchableOpacity
+          style={styles.sosButton}
+          onPress={() => Linking.openURL("tel:100")}
+      >
+        <MaterialCommunityIcons name="alarm-light" size={24} color="white" />
+      </TouchableOpacity>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -747,7 +756,7 @@ const MainScreen = ({ navigation }) => {
         </TouchableOpacity>
       )}
 
-      {!rideOngoingDataUser && (
+      {(!rideOngoingDataUser && freeRide > 0) && (
           <View style={styles.bottomContainer}>
             <View style={styles.fromContainer}>
               <Text style={styles.fromLabel}>From: </Text>
@@ -1139,4 +1148,22 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     zIndex: 10,
   },
+  sosButton: {
+    position: "absolute",
+    left: 20,
+    bottom: 135,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#ff3b30", // bright red
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    zIndex: 10,
+  },
+
 });

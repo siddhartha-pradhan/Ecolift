@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {useState, useRef, useEffect, use} from "react";
 import {
   View,
   Text,
@@ -12,7 +12,9 @@ import {
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import DrawerScreen from "./DrawerScreen";
-import PopPremiumContactScreen from "./PopPremiumContactScreen"; // import the popup
+import PopPremiumContactScreen from "./PopPremiumContactScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DriverService from "../../services/DriverService"; // import the popup
 
 const { width } = Dimensions.get("window");
 
@@ -22,6 +24,22 @@ const PremiumScreen = () => {
   const slideAnim = useRef(new Animated.Value(-width * 0.8)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const shadowAnim = useRef(new Animated.Value(0)).current;
+
+  const [userData, setUserData] = useState();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userName = await AsyncStorage.getItem("userEmail");
+        const user = await DriverService.getDriverById();
+        const userModel = user.find((x) => x.email === userName);
+        setUserData(userModel);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -57,34 +75,48 @@ const PremiumScreen = () => {
       </SafeAreaView>
 
       <View style={styles.contentContainer}>
-        <MaterialCommunityIcons name="crown" size={200} color="#008080" />
-
-        {/* Premium Header */}
-        <View style={styles.premiumHeader.wrapper}>
-          <Text style={styles.premiumHeader.sparkle}>✨ </Text>
-          <Text style={styles.premiumHeader.ecolift}>Ecolift </Text>
-          <Text style={styles.premiumHeader.premium}>Premium</Text>
-          <Text style={styles.premiumHeader.sparkle}> ✨</Text>
-        </View>
-
-        {/* Premium Points */}
-        <View style={styles.premiumPoints.container}>
-          <Text style={styles.premiumPoints.point}>
-            • 🚫 Enjoy an Ad-Free Experience.
-          </Text>
-          <Text style={styles.premiumPoints.point}>
-            • 🎁 Unlock Total of 3 Free Rides.
-          </Text>
-          <Text style={styles.premiumPoints.point}>
-            • 📅 Pre-book Your Ride in Advance.
-          </Text>
-        </View>
+        {userData?.userProfile?.isPremium ? (
+            <>
+              <MaterialCommunityIcons name="check-decagram" size={150} color="#008080" />
+              <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 20, alignItems: "center", justifyContent: "center", display:"", marginLeft: 30 }}>
+                Premium Verified 🎉
+              </Text>
+              <View>
+                <Text style={styles.premiumPoints.point}>
+                  🚘 Free Rides Remaining: {userData.userProfile.freeRidesRemaining}
+                </Text>
+              </View>
+            </>
+        ) : (
+            <>
+              <MaterialCommunityIcons name="crown" size={200} color="#008080" />
+              <View style={styles.premiumHeader.wrapper}>
+                <Text style={styles.premiumHeader.sparkle}>✨ </Text>
+                <Text style={styles.premiumHeader.ecolift}>Ecolift </Text>
+                <Text style={styles.premiumHeader.premium}>Premium</Text>
+                <Text style={styles.premiumHeader.sparkle}> ✨</Text>
+              </View>
+              <View>
+                <Text style={styles.premiumPoints.point}>
+                  🚫 Enjoy an Ad-Free Experience.
+                </Text>
+                <Text style={styles.premiumPoints.point}>
+                  🎁 Unlock Total of 3 Free Rides.
+                </Text>
+                <Text style={styles.premiumPoints.point}>
+                  📅 Pre-book Your Ride in Advance.
+                </Text>
+              </View>
+            </>
+        )}
       </View>
 
       {/* Button to show the popup */}
-      <TouchableOpacity onPress={togglePopup} style={styles.premiumButton}>
-        <Text style={styles.premiumButtonText}>Activate Premium</Text>
-      </TouchableOpacity>
+      {!userData?.userProfile?.isPremium && (
+          <TouchableOpacity onPress={togglePopup} style={styles.premiumButton}>
+            <Text style={styles.premiumButtonText}>Activate Premium</Text>
+          </TouchableOpacity>
+      )}
 
       {/* Overlay for drawer */}
       {isDrawerOpen && (
@@ -143,6 +175,7 @@ const styles = StyleSheet.create({
     wrapper: {
       flexDirection: "row",
       marginTop: 20,
+      marginBottom: 20,
       alignItems: "center",
     },
     ecolift: {

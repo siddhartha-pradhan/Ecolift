@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   userInfoValue: {
-    fontSize: 20,
+    fontSize: 15,
     color: "#008080",
     fontWeight: "600",
     marginBottom: 20,

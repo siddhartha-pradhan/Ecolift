@@ -167,13 +167,14 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "700",
         color: "#008080",
-        marginTop: 350,
+        marginTop: 60,
         marginBottom: 10,
         textAlign: "center",
     },
     listContainer: {
         paddingHorizontal: 16,
         paddingBottom: 30,
+        marginTop: 30
     },
     orderCard: {
         backgroundColor: "#f8f8f8",
