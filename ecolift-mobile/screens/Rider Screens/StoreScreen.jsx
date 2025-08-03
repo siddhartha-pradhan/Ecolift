@@ -187,6 +187,8 @@ const StoreScreen = () => {
 
       const apiUrl = REACT_APP_API_URL;
 
+      console.log(apiUrl);
+
       const res = await fetch(`${apiUrl}/api/v1/order`, {
         method: 'POST',
         headers: {
